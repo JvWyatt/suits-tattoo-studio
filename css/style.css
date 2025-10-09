@@ -1,0 +1,1241 @@
+:root {
+  --dark: #222;
+  --accent: #9b3fae;
+}
+* { 
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+/* Optimización de renderizado */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Mejorar rendimiento de animaciones */
+.gallery-item,
+.contact-icon,
+.service-card,
+.artist,
+.thumb,
+.carousel-btn,
+.lightbox-prev,
+.lightbox-next {
+  will-change: transform;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+  background: url('../img/background.png') center/cover no-repeat fixed;
+  background-color: #1e1e1e;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.frame {
+  width: 100%;
+  background: transparent;
+  min-height: 100vh;
+  padding-top: 74px; /* altura del header */
+}
+
+/* Asegurar que el hero cubra toda la pantalla */
+#gallery {
+  margin-top: 0;
+  padding-top: 40px;
+}
+
+/* Compensar el scroll para que las secciones no queden tapadas por el header */
+section[id] {
+  scroll-margin-top: 30px;
+}
+header {
+  background: rgba(0,0,0,1);
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  transition: background 0.3s ease;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.logo img {
+  height: 46px;
+  width: auto;
+}
+.logo-text {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: 'Merriweather', serif;
+}
+nav {
+  margin-left: auto;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+nav a {
+  color: #ddd;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+nav a:hover {
+  color: var(--accent);
+}
+.btn-book {
+  background: var(--accent);
+  color: #fff;
+  padding: 7px 12px;
+  border-radius: 4px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.btn-book:hover {
+  background: #b34fc7;
+  transform: translateY(-2px);
+  color: #fff !important;
+}
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  background: transparent;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-background {
+  position: absolute;
+  inset: 0;
+  background: url('../img/hero.png') center/cover no-repeat;
+  transition: opacity 0.1s ease;
+}
+.hero-logo-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.1s ease;
+  z-index: 2;
+}
+.hero-logo-overlay img {
+  max-width: 400px;
+  width: 80%;
+  height: auto;
+  filter: drop-shadow(0 4px 20px rgba(0,0,0,0.5));
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0,0,0,.1) 0%, rgba(0,0,0,.5) 30%, rgba(0,0,0,.8) 60%, rgba(0,0,0,.9) 100%);
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+  z-index: 1;
+}
+.hero-inner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fff;
+  text-align: center;
+  z-index: 3;
+  transition: all 0.1s ease;
+}
+.hero h1 {
+  font-family: 'Merriweather', serif;
+  font-size: 5rem;
+  margin: 0;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+  letter-spacing: 2px;
+  transition: opacity 0.1s ease;
+}
+.panel {
+  background: linear-gradient(180deg, 
+    transparent 0%, 
+    rgba(75,0,80,.2) 15%,
+    rgba(60,0,65,.3) 40%,
+    rgba(40,0,45,.4) 100%);
+  color: #fff;
+  padding: 40px 5% 64px;
+  min-height: 100vh;
+}
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.section-title {
+  font-family: 'Merriweather', serif;
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 35px;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.section-subtitle {
+  text-align: center;
+  font-size: 1.1rem;
+  color: rgba(255,255,255,.8);
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+
+/* Galería Carrusel */
+.gallery-carousel {
+  position: relative;
+  margin-bottom: 20px;
+  padding: 0 60px;
+}
+.gallery-scroll {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 20px 0 20px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  justify-content: center;
+}
+.gallery-scroll::-webkit-scrollbar {
+  display: none;
+}
+.gallery-item {
+  flex: 0 0 250px;
+  height: 330px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, z-index 0.3s ease;
+  margin-left: -125px;
+  position: relative;
+}
+.gallery-item:first-child {
+  margin-left: 0;
+}
+.gallery-item:hover {
+  transform: translateY(-20px) scale(1.08);
+  box-shadow: 0 15px 40px rgba(155,63,174,0.7);
+  z-index: 100;
+}
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.gallery-item:hover img {
+  transform: scale(1.1);
+}
+
+/* Indicadores de puntos */
+.gallery-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 25px;
+  margin-bottom: 30px;
+}
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.3);
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.dot.active {
+  background: var(--accent);
+  transform: scale(1.3);
+}
+.dot:hover {
+  background: rgba(155,63,174,.7);
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(155,63,174,0.9);
+  color: white;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.3s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.carousel-btn:hover {
+  background: var(--accent);
+  transform: translateY(-50%) scale(1.1);
+}
+.carousel-btn.prev {
+  left: 0;
+}
+.carousel-btn.next {
+  right: 0;
+}
+
+/* Lightbox para ver imagen completa */
+.lightbox {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.95);
+  align-items: center;
+  justify-content: center;
+}
+.lightbox.active {
+  display: flex;
+}
+.lightbox-content {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  animation: zoom 0.3s;
+}
+@keyframes zoom {
+  from {transform: scale(0.5); opacity: 0;}
+  to {transform: scale(1); opacity: 1;}
+}
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  color: white;
+  font-size: 50px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.lightbox-close:hover {
+  color: var(--accent);
+}
+.lightbox-prev,
+.lightbox-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(155,63,174,0.8);
+  color: white;
+  border: none;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 2.5rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.lightbox-prev:hover,
+.lightbox-next:hover {
+  background: var(--accent);
+}
+.lightbox-prev {
+  left: 30px;
+}
+.lightbox-next {
+  right: 30px;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 60px;
+}
+.thumb {
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+.thumb:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(155,63,174,0.4);
+}
+.thumb img { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.thumb:hover img {
+  transform: scale(1.1);
+}
+.lower { display: flex; gap: 40px; align-items: flex-start; margin-top: 40px; }
+.artists { flex: 1; }
+.artists-section {
+  margin-top: 40px;
+  margin-bottom: 100px;
+}
+.artists-list { 
+  display: flex; 
+  gap: 40px;
+  justify-content: center;
+}
+.artist {
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+.artist:hover {
+  transform: translateY(-5px);
+}
+.avatar {
+  width: 130px; 
+  height: 130px; 
+  border-radius: 50%; 
+  overflow: hidden;
+  border: 4px solid rgba(155,63,174,.5);
+  margin: 0 auto 15px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.artist:hover .avatar {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(155,63,174,0.5);
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.artist h4 { 
+  margin: 12px 0 6px; 
+  font-size: 1.1rem; 
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.artist p { 
+  margin: 0; 
+  color: rgba(255,255,255,.7); 
+  font-size: 0.9rem; 
+}
+
+/* Sección unificada de Contacto y Reserva */
+.contact-booking-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 40px;
+  align-items: start;
+}
+
+/* Iconos de Contacto */
+.contact-icons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 25px;
+}
+.contact-icon-link {
+  text-decoration: none;
+  color: inherit;
+}
+.contact-icon {
+  background: rgba(0,0,0,.25);
+  padding: 20px 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(155,63,174,.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+.contact-icon:hover {
+  transform: translateY(-10px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 25px rgba(155,63,174,0.4);
+}
+.contact-icon svg {
+  width: 40px;
+  height: 40px;
+  color: var(--accent);
+}
+.contact-icon span {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.9);
+}
+
+/* Horario de Atención */
+.schedule-info {
+  background: rgba(0,0,0,.25);
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid rgba(155,63,174,.2);
+  text-align: center;
+}
+.schedule-info h3 {
+  font-family: 'Merriweather', serif;
+  font-size: 1.2rem;
+  margin: 0 0 15px 0;
+  color: var(--accent);
+}
+.schedule-info p {
+  color: rgba(255,255,255,.8);
+  font-size: 0.95rem;
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+.booking-form-container {
+  display: flex;
+  flex-direction: column;
+}
+.book { width: 400px; flex-shrink: 0; }
+.card {
+  background: rgba(0,0,0,.25);
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid rgba(155,63,174,.2);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.card h3 {
+  font-family: 'Merriweather', serif;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  color: var(--accent);
+}
+.book-description {
+  color: rgba(255,255,255,.7);
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.field { margin-bottom: 15px; }
+.field label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,.8);
+  font-weight: 600;
+}
+input, textarea, select {
+  width: 100%; 
+  padding: 12px 15px; 
+  border-radius: 6px;
+  border: 1px solid rgba(155,63,174,.3);
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  font-size: 0.95rem;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: rgba(255,255,255,.12);
+}
+input::placeholder, textarea::placeholder {
+  color: rgba(255,255,255,.4);
+}
+.submit {
+  display: block; 
+  width: 100%;
+  margin-top: 15px;
+  background: var(--accent); 
+  color: #fff; 
+  padding: 12px 20px; 
+  border-radius: 6px; 
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.submit:hover {
+  background: #b34fc7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(155,63,174,0.4);
+}
+
+/* Servicios */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  margin-top: 40px;
+}
+.service-card {
+  background: rgba(0,0,0,.25);
+  padding: 25px 20px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid rgba(155,63,174,.2);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.service-card:hover {
+  transform: translateY(-10px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 25px rgba(155,63,174,0.3);
+}
+.service-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+.service-card h3 {
+  font-family: 'Merriweather', serif;
+  font-size: 1.1rem;
+  margin: 12px 0 8px;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+.service-card p {
+  color: rgba(255,255,255,.7);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Contacto */
+.contact-content {
+  max-width: 900px;
+  margin: 40px auto;
+}
+.contact-info {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 25px;
+}
+.contact-item {
+  background: rgba(0,0,0,.25);
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid rgba(155,63,174,.2);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+.contact-item:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent);
+}
+.contact-item h3 {
+  font-family: 'Merriweather', serif;
+  font-size: 1.2rem;
+  margin: 0 0 10px 0;
+  color: var(--accent);
+}
+.contact-item p {
+  color: rgba(255,255,255,.8);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+.social-link {
+  color: rgba(255,255,255,.9);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.social-link:hover {
+  color: var(--accent);
+}
+
+/* Footer Minimalista - Una sola línea */
+.footer {
+  background: rgba(0,0,0,.9);
+  color: rgba(255,255,255,.8);
+  padding: 20px 5%;
+  border-top: 1px solid rgba(155,63,174,.3);
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  text-align: center;
+}
+
+.footer-logo-img {
+  width: 40px;
+  height: 40px;
+}
+
+.footer-name {
+  font-family: 'Merriweather', serif;
+  font-size: 1rem;
+  margin: 0;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.footer-copyright {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,.6);
+}
+
+@media (max-width: 980px) {
+  .lower { flex-direction: column; }
+  .book { width: 100%; max-width: 500px; margin: 0 auto; }
+  .artists-list { flex-wrap: wrap; justify-content: center; }
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .section-title { font-size: 2rem; }
+  .services-grid { grid-template-columns: repeat(2, 1fr); }
+  .contact-info { grid-template-columns: 1fr; }
+  .contact-booking-wrapper { grid-template-columns: 1fr; gap: 50px; }
+  .contact-icons { grid-template-columns: repeat(2, 1fr); }
+  .gallery-carousel { padding: 0 50px; }
+  .gallery-scroll {
+    justify-content: flex-start;
+  }
+  
+  /* Footer responsive tablet - mantiene horizontal */
+  .footer {
+    padding: 20px 5%;
+  }
+  
+  .gallery-item { 
+    flex: 0 0 220px; 
+    height: 300px;
+    margin-left: -110px;
+  }
+  .gallery-item:first-child {
+    margin-left: 0;
+  }
+  
+  /* Optimizaciones adicionales tablet */
+  header {
+    height: 70px;
+    padding: 15px 25px;
+  }
+  
+  .frame {
+    padding-top: 0;
+  }
+  
+  .panel {
+    padding: 35px 25px 50px;
+    min-height: auto;
+  }
+  
+  /* Logo visible desde el inicio en tablets */
+  .hero-logo-overlay {
+    opacity: 1 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+  }
+  
+  /* Título TAMBIÉN visible en tablets - MÁS ABAJO del logo */
+  .hero h1 {
+    opacity: 1 !important;
+    font-size: 2.8rem;
+    position: relative;
+    z-index: 4;
+    text-shadow: 3px 3px 12px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.6);
+  }
+  
+  .hero-inner {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 75%;
+    transform: translateY(-50%);
+  }
+  
+  .hero {
+    height: calc(100vh + 80px);
+    min-height: calc(100vh + 80px);
+    max-height: calc(100vh + 80px);
+    margin-top: -70px;
+    padding-top: 70px;
+    padding-bottom: 80px;
+  }
+  
+  .hero-logo-overlay img {
+    max-width: 600px; /* 2 veces más grande (300px * 2) */
+    width: 90%;
+  }
+  
+  input, textarea, select {
+    font-size: 16px; /* Evita zoom automático en iOS */
+  }
+}
+
+@media (max-width: 580px) {
+  .gallery { grid-template-columns: 1fr; }
+  
+  /* Ajustar header en móvil */
+  header {
+    padding: 12px 20px;
+    height: 62px; /* Altura fija del header en móvil */
+  }
+  
+  /* Eliminar padding-top del frame para que hero ocupe toda la pantalla */
+  .frame {
+    padding-top: 0;
+  }
+  
+  /* Logo visible desde el inicio en móviles */
+  .hero-logo-overlay {
+    opacity: 1 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  /* Título TAMBIÉN visible en móviles - MÁS ABAJO del logo */
+  .hero h1 {
+    opacity: 1 !important;
+    font-size: 2.2rem;
+    position: relative;
+    z-index: 4;
+    text-shadow: 3px 3px 12px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.6);
+  }
+  
+  .hero-inner {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 72%;
+    transform: translateY(-50%);
+  }
+  
+  /* Ajustar hero para que cubra toda la pantalla incluyendo header */
+  .hero {
+    height: calc(100vh + 80px) !important;
+    min-height: calc(100vh + 80px) !important;
+    max-height: calc(100vh + 80px) !important;
+    margin-top: -62px; /* Compensar altura del header móvil */
+    padding-top: 62px; /* Mantener contenido debajo del header */
+    padding-bottom: 80px; /* Estirar mucho más abajo */
+  }
+  
+  .panel { 
+    padding: 30px 20px 40px; 
+    min-height: auto;
+  }
+  
+  .hero h1 { 
+    font-size: 3rem;
+  }
+  .section-title { font-size: 1.8rem; }
+  .section-subtitle { font-size: 1rem; }
+  .artists-list { flex-direction: column; align-items: center; }
+  .services-grid { grid-template-columns: 1fr; }
+  .gallery-carousel { 
+    padding: 0 40px;
+  }
+  .gallery-scroll {
+    justify-content: flex-start;
+  }
+  .gallery-item { 
+    flex: 0 0 220px; 
+    height: 300px;
+    margin-left: -110px;
+  }
+  .gallery-item:first-child {
+    margin-left: 0;
+  }
+  .carousel-btn { width: 35px; height: 35px; font-size: 1.5rem; }
+  .lightbox-prev, .lightbox-next { width: 45px; height: 45px; font-size: 2rem; }
+  .lightbox-prev { left: 10px; }
+  .lightbox-next { right: 10px; }
+  .dot { width: 10px; height: 10px; }
+  
+  /* Footer responsive móvil */
+  .footer {
+    padding: 20px;
+  }
+  
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+  }
+  
+  .footer-info p {
+    font-size: 0.85rem;
+  }
+  
+  .footer-social {
+    order: -1;
+  }
+  
+  .footer-contact a {
+    font-size: 0.9rem;
+  }
+  
+  /* Menú hamburguesa para móviles */
+  .mobile-menu-toggle {
+    display: block;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: auto;
+  }
+
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    top: 62px; /* Altura ajustada del header en móvil */
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.98);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    z-index: 999;
+    animation: slideDown 0.3s ease;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .mobile-nav.active {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .mobile-nav a {
+    color: #ddd;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 12px 15px;
+    border-radius: 6px;
+    transition: background 0.3s ease, color 0.3s ease;
+    text-align: center;
+  }
+
+  .mobile-nav a:hover,
+  .mobile-nav a.btn-book {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  /* Ajustes adicionales para móvil */
+  .logo img {
+    height: 38px;
+  }
+
+  .logo-text {
+    font-size: 1.2rem;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+    padding: 0 20px;
+  }
+
+  .hero-logo-overlay img {
+    max-width: 500px; /* 2 veces más grande (250px * 2) */
+    width: 85%;
+  }
+
+  .gallery-carousel {
+    padding: 0 30px;
+  }
+
+  .gallery-item {
+    flex: 0 0 180px;
+    height: 250px;
+    margin-left: -90px;
+  }
+
+  .contact-icons {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .contact-icon {
+    padding: 18px 15px;
+    flex-direction: row;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .contact-icon svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .card h3 {
+    font-size: 1.3rem;
+  }
+
+  textarea {
+    font-size: 1rem;
+  }
+
+  .submit {
+    padding: 14px 20px;
+    font-size: 1.05rem;
+  }
+
+  .lightbox-content {
+    max-width: 95%;
+    max-height: 85%;
+  }
+
+  .lightbox-close {
+    top: 10px;
+    right: 20px;
+    font-size: 40px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .dot.active {
+    transform: scale(1.5);
+  }
+
+  .container {
+    padding: 0 15px;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+  }
+
+  .section-subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+    padding: 0 10px;
+  }
+
+  .service-card {
+    padding: 20px 15px;
+  }
+
+  .avatar {
+    width: 110px;
+    height: 110px;
+  }
+  
+  nav { 
+    display: none; 
+  }
+}
+
+/* Media query para tablets */
+@media (min-width: 581px) and (max-width: 980px) {
+  .mobile-menu-toggle {
+    display: block;
+  }
+  
+  nav {
+    display: none;
+  }
+  
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    top: 70px; /* Altura del header en tablet */
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.98);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    z-index: 999;
+  }
+
+  .mobile-nav.active {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .mobile-nav a {
+    color: #ddd;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 12px 15px;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .mobile-nav a:hover,
+  .mobile-nav a.btn-book {
+    background: var(--accent);
+    color: #fff;
+  }
+  
+  .hero h1 {
+    font-size: 3.5rem;
+  }
+  
+  .contact-icons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Media query para desktop */
+@media (min-width: 981px) {
+  .mobile-menu-toggle {
+    display: none;
+  }
+  
+  nav {
+    display: flex;
+  }
+  
+  .mobile-nav {
+    display: none !important;
+  }
+}
+
+/* Media query adicional para móviles muy pequeños (< 400px) */
+@media (max-width: 400px) {
+  header {
+    height: 56px;
+    padding: 10px 15px;
+  }
+  
+  .frame {
+    padding-top: 0;
+  }
+  
+  /* Logo visible desde el inicio */
+  .hero-logo-overlay {
+    opacity: 1 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  /* Título TAMBIÉN visible - MÁS ABAJO del logo */
+  .hero h1 {
+    opacity: 1 !important;
+    font-size: 1.8rem;
+    position: relative;
+    z-index: 4;
+    text-shadow: 3px 3px 12px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.6);
+  }
+  
+  .hero-inner {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 70%;
+    transform: translateY(-50%);
+  }
+  
+  .hero { 
+    height: calc(100vh + 80px) !important; 
+    min-height: calc(100vh + 80px) !important;
+    max-height: calc(100vh + 80px) !important;
+    margin-top: -56px;
+    padding-top: 56px;
+    padding-bottom: 80px;
+  }
+  
+  .hero h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-logo-overlay img {
+    max-width: 400px; /* 2 veces más grande (200px * 2) */
+    width: 80%;
+  }
+  
+  .logo-text {
+    font-size: 1rem;
+  }
+  
+  .logo img {
+    height: 32px;
+  }
+  
+  .mobile-nav {
+    top: 56px; /* Ajustar para el header más pequeño */
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+  }
+  
+  .panel {
+    min-height: auto;
+  }
+  
+  .gallery-scroll {
+    justify-content: flex-start;
+  }
+  
+  .gallery-item {
+    flex: 0 0 160px;
+    height: 220px;
+    margin-left: -80px;
+  }
+  
+  .gallery-carousel {
+    padding: 0 25px;
+  }
+  
+  .carousel-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 1.2rem;
+  }
+  
+  .contact-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .contact-icon span {
+    font-size: 0.85rem;
+  }
+}
