@@ -57,37 +57,9 @@
         <h2 class="section-title">Galería</h2>
         <div class="gallery-carousel">
           <button class="carousel-btn prev" onclick="scrollGallery(-1)">‹</button>
-          <div class="gallery-scroll" id="galleryScroll">
-            <div class="gallery-item" onclick="openLightbox(0)">
-              <img src="img/1.png" alt="Tatuaje 1">
-            </div>
-            <div class="gallery-item" onclick="openLightbox(1)">
-              <img src="img/1.png" alt="Tatuaje 2">
-            </div>
-            <div class="gallery-item" onclick="openLightbox(2)">
-              <img src="img/1.png" alt="Tatuaje 3">
-            </div>
-            <div class="gallery-item" onclick="openLightbox(3)">
-              <img src="img/1.png" alt="Tatuaje 4">
-            </div>
-            <div class="gallery-item" onclick="openLightbox(4)">
-              <img src="img/1.png" alt="Tatuaje 5">
-            </div>
-            <div class="gallery-item" onclick="openLightbox(5)">
-              <img src="img/1.png" alt="Tatuaje 6">
-            </div>
-            <div class="gallery-item" onclick="openLightbox(6)">
-              <img src="img/1.png" alt="Tatuaje 7">
-            </div>
-            <div class="gallery-item" onclick="openLightbox(7)">
-              <img src="img/1.png" alt="Tatuaje 8">
-            </div>
-          </div>
+          <div class="gallery-scroll" id="galleryScroll"></div>
           <button class="carousel-btn next" onclick="scrollGallery(1)">›</button>
         </div>
-        
-        <!-- Indicadores de puntos -->
-        <div class="gallery-dots" id="galleryDots"></div>
       </div>
       
       <!-- Lightbox para ver imagen completa -->
@@ -204,10 +176,27 @@
           <!-- Formulario de Reserva -->
           <div class="booking-form-container">
             <div class="card">
-              <h3>Agenda tu cita</h3>
+              <h3>Más información</h3>
               <form id="bookingForm">
-                <div class="field"><textarea id="msg" placeholder="Hola, me gustaría agendar una cita para un tatuaje..." rows="4" required></textarea></div>
-                <button class="submit" type="submit">Enviar por WhatsApp</button>
+                <div class="field">
+                  <label for="customerName">Nombre</label>
+                  <input type="text" id="customerName" name="customerName" placeholder="Escribe tu nombre" required>
+                </div>
+                <div class="field">
+                  <label for="serviceCategory">Servicio de interés</label>
+                  <select id="serviceCategory" name="serviceCategory" required>
+                    <option value="" disabled selected hidden>Selecciona una categoría</option>
+                    <option value="Tattoo">Tattoo</option>
+                    <option value="Piercing">Piercing</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="serviceDetail">Detalle del servicio (opcional)</label>
+                  <select id="serviceDetail" name="serviceDetail" disabled>
+                    <option value="" selected>Selecciona un servicio (opcional)</option>
+                  </select>
+                </div>
+                <button class="submit" type="submit">Continuar</button>
               </form>
             </div>
           </div>

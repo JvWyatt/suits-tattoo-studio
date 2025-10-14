@@ -70,112 +70,158 @@ window.addEventListener('scroll', function() {
   }
 });
 
+const serviceOptions = {
+  Tattoo: [
+    { value: 'Blackwork', label: 'Blackwork' },
+    { value: 'Diseños personalizados', label: 'Diseños personalizados' },
+    { value: 'Cover-up artístico', label: 'Cover-up artístico' }
+  ],
+  Piercing: [
+    { value: 'Piercing de lóbulo', label: 'Piercing de lóbulo' },
+    { value: 'Piercing de cartílago', label: 'Piercing de cartílago' },
+    { value: 'Piercing septum', label: 'Piercing septum' }
+  ]
+};
+
+function updateServiceDetailOptions(category) {
+  const detailSelect = document.getElementById('serviceDetail');
+  if (!detailSelect) return;
+
+  detailSelect.innerHTML = '';
+
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = category ? `Selecciona un servicio de ${category} (opcional)` : 'Selecciona un servicio (opcional)';
+  placeholder.selected = true;
+  detailSelect.appendChild(placeholder);
+
+  const options = serviceOptions[category];
+
+  if (category && Array.isArray(options)) {
+    options.forEach(({ value, label }) => {
+      const optionElement = document.createElement('option');
+      optionElement.value = value;
+      optionElement.textContent = label;
+      detailSelect.appendChild(optionElement);
+    });
+    detailSelect.disabled = false;
+  } else {
+    detailSelect.disabled = true;
+  }
+}
+
 document.getElementById('bookingForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  
-  const msg = document.getElementById('msg').value.trim();
-  
-  if (!msg) {
-    alert('Por favor escribe un mensaje.');
+
+  const nameInput = document.getElementById('customerName');
+  const serviceCategorySelect = document.getElementById('serviceCategory');
+  const serviceDetailSelect = document.getElementById('serviceDetail');
+  const customerName = nameInput.value.trim();
+  const selectedCategory = serviceCategorySelect.value;
+  const selectedDetail = serviceDetailSelect.value;
+
+  if (!customerName) {
+    alert('Por favor escribe tu nombre.');
+    nameInput.focus();
     return;
   }
-  
-  // Construir el mensaje para WhatsApp
-  const message = msg;
-  
+
+  if (!selectedCategory) {
+    alert('Por favor selecciona una categoría de servicio.');
+    serviceCategorySelect.focus();
+    return;
+  }
+
+  const categoryText = serviceCategorySelect.options[serviceCategorySelect.selectedIndex]?.text || selectedCategory;
+  const detailText = selectedDetail
+    ? (serviceDetailSelect.options[serviceDetailSelect.selectedIndex]?.text || selectedDetail)
+    : '';
+
+  let message;
+  if (selectedDetail) {
+    message = `Hola, mi nombre es ${customerName}. Me gustaría consultar sobre un ${detailText}.`;
+  } else {
+    message = `Hola, mi nombre es ${customerName}. Me gustaría consultar sobre un ${categoryText.toLowerCase()} .`;
+  }
+
   // Número de WhatsApp del estudio (número de prueba)
   const whatsappNumber = '50768263176'; // Formato: código de país + número sin espacios ni símbolos
-  
+
   // Codificar el mensaje para URL
   const encodedMessage = encodeURIComponent(message);
-  
+
   // Abrir WhatsApp
   window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
-  
+
   // Limpiar el formulario
   this.reset();
+  updateServiceDetailOptions('');
 });
 
 // Galería Carrusel
-const totalImages = 8;
+const galleryImages = Array.from({ length: 27 }, (_, index) => {
+  const id = String(index + 1).padStart(3, '0');
+  return `img/portafoil/imagen${id}.webp`;
+});
 
-// Inicializar los puntos indicadores
-function initDots() {
-  const dotsContainer = document.getElementById('galleryDots');
-  for (let i = 0; i < totalImages; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'dot';
-    if (i === 0) dot.classList.add('active');
-    dot.onclick = () => scrollToImage(i);
-    dotsContainer.appendChild(dot);
-  }
-}
+function renderGallery() {
+  const galleryScroll = document.getElementById('galleryScroll');
+  if (!galleryScroll) return;
 
-// Actualizar puntos activos basado en el scroll
-function updateDots() {
-  const gallery = document.querySelector('.gallery-scroll');
-  const scrollLeft = gallery.scrollLeft;
-  const itemWidth = 125; // 250px / 2 por el overlap
-  const currentIndex = Math.round(scrollLeft / itemWidth);
-  
-  const dots = document.querySelectorAll('.dot');
-  dots.forEach((dot, index) => {
-    if (index === currentIndex) {
-      dot.classList.add('active');
-    } else {
-      dot.classList.remove('active');
-    }
+  galleryScroll.innerHTML = '';
+
+  galleryImages.forEach((src, index) => {
+    const item = document.createElement('div');
+    item.className = 'gallery-item';
+    item.onclick = () => openLightbox(index);
+
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = `Tatuaje ${index + 1}`;
+    img.loading = 'lazy';
+
+    item.appendChild(img);
+    galleryScroll.appendChild(item);
   });
-}
 
-// Scroll a una imagen específica
-function scrollToImage(index) {
-  const gallery = document.querySelector('.gallery-scroll');
-  const itemWidth = 125; // 250px / 2 por el overlap
-  gallery.scrollTo({
-    left: index * itemWidth,
-    behavior: 'smooth'
-  });
+  galleryScroll.scrollLeft = 0;
+  currentImageIndex = 0;
 }
 
 function scrollGallery(direction) {
   const gallery = document.querySelector('.gallery-scroll');
+  if (!gallery) return;
+  if (!galleryImages.length) return;
   const itemWidth = 125; // 250px / 2 por el overlap
   gallery.scrollBy({
     left: direction * itemWidth,
     behavior: 'smooth'
   });
-  setTimeout(updateDots, 300);
 }
 
-// Listener para actualizar dots al hacer scroll
 document.addEventListener('DOMContentLoaded', function() {
-  initDots();
-  const gallery = document.querySelector('.gallery-scroll');
-  if (gallery) {
-    gallery.addEventListener('scroll', updateDots);
+  renderGallery();
+
+  const serviceCategorySelect = document.getElementById('serviceCategory');
+  if (serviceCategorySelect) {
+    updateServiceDetailOptions('');
+    serviceCategorySelect.addEventListener('change', function() {
+      updateServiceDetailOptions(this.value);
+    });
   }
 });
 
 // Lightbox para ver imágenes completas
 let currentImageIndex = 0;
-const galleryImages = [
-  'img/1.png',
-  'img/1.png',
-  'img/1.png',
-  'img/1.png',
-  'img/1.png',
-  'img/1.png',
-  'img/1.png',
-  'img/1.png'
-];
-
 function openLightbox(index) {
+  if (!galleryImages.length) return;
   currentImageIndex = index;
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightbox-img');
   lightbox.classList.add('active');
-  lightboxImg.src = galleryImages[index];
+  const clampedIndex = Math.max(0, Math.min(galleryImages.length - 1, index));
+  lightboxImg.src = galleryImages[clampedIndex];
+  currentImageIndex = clampedIndex;
   document.body.style.overflow = 'hidden'; // Prevenir scroll del body
 }
 
@@ -186,6 +232,7 @@ function closeLightbox() {
 }
 
 function changeLightboxImage(direction) {
+  if (!galleryImages.length) return;
   currentImageIndex += direction;
   if (currentImageIndex < 0) {
     currentImageIndex = galleryImages.length - 1;
